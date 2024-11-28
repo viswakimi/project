@@ -1,7 +1,7 @@
 The "Redbus Data Scraping and Filtering with Streamlit Application" project is designed to streamline bus travel data collection, 
 filtering, and visualization using a combination of powerful Python libraries and tools. 
 This system automates the extraction of detailed information from Redbus (such as bus schedules, pricing, routes, and seat availability), processes it for analysis,
-and offers a user-friendly interface for decision-making through a Streamlit application.
+through a Streamlit application.
 
 
 
