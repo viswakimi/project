@@ -6,7 +6,7 @@ from sqlalchemy import create_engine
 # Set Streamlit page configuration
 st.set_page_config(
     layout="wide",
-    page_icon=":material/directions_bus:",
+    page_icon="🚌",
     page_title="RedBus Project",
     initial_sidebar_state="expanded"
 )
@@ -16,14 +16,14 @@ st.markdown(
     """
     <style>
     .stApp {
-        background-image: url("https://rb.gy/l1gvfd");
+        background-image: url("https://shorturl.at/ZvhK5");
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
         background-attachment: fixed;
     }
     [data-testid="stSidebar"] {
-        background-color: rgba(96, 25, 25, 0.6);
+        background-color: rgba(100, 60, 50, 0.4);
     }
     </style>
     """,
@@ -174,7 +174,7 @@ filtered_data = fetch_data(query)
 
 # Display results
 st.title(":red[RedBus Routes Data Filtering and Analysis]")
-st.write("Filtered Data:")
+st.write(":red[Filtered Data:]")
 st.dataframe(filtered_data)
 
 # Download button
