@@ -15,8 +15,7 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-    .stApp {
-        background-image: url("https://shorturl.at/ZvhK5");
+    .stApp {        
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -29,18 +28,6 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-
-# Initialize session state for filters
-default_filters = {
-    "selected_price": "Anything",
-    "selected_star": (0.0, 5.0),
-    "selected_departure": "Anything",
-    "selected_arrival": "Anything",
-    "selected_duration": "Anything",
-}
-for key, value in default_filters.items():
-    if key not in st.session_state:
-        st.session_state[key] = value
 
 # Database connection
 engine = create_engine('mysql+pymysql://root:Abcd1234@127.0.0.1:3306/redbus')
@@ -60,28 +47,33 @@ initial_data['duration'] = (
     initial_data['duration'].str.extract(r'(\d+)').astype(float).fillna(0).astype(int)
 )
 
-# Sidebar filters
-with st.sidebar:
-    st.header("Filters")
-    
-    # Bus Type Filter
+# Title and Filters
+st.title(":red[RedBus Data Filtering Application]")
+
+st.markdown("### Filter by Bus Type and Route")
+col1, col2 = st.columns(2)
+
+with col1:
     bustype_filter = st.multiselect(
         "Select Bus Type:",
-        options=np.append(['Anything'], initial_data['bustype'].unique()),
-        default=["Anything"]
+        options=np.append(['Anything'], initial_data['bustype'].unique()),        
     )
 
-    # Route Filter
+with col2:
     route_filter = st.multiselect(
         "Select Route:",
         options=np.append(['Anything'], initial_data['route_name'].unique()),
-        default=["Anything"]
+        
     )
 
+# Sidebar Filters
+with st.sidebar:
+    st.header("Additional Filters")
+    
     # Price Range Filter
     st.write("Select Price Range:")
     price_options = ['Anything', '0-250', '250-500', '500-1000', '1000-1500', '1500+']
-    st.session_state.selected_price = st.radio(
+    selected_price = st.radio(
         "Price Range",
         options=price_options,
         index=0
@@ -94,7 +86,7 @@ with st.sidebar:
         '1000-1500': (1000, 1500),
         '1500+': (1500, initial_data['price'].max())
     }
-    price_filter = price_filter_map[st.session_state.selected_price]
+    price_filter = price_filter_map[selected_price]
 
     # Star Rating Filter
     star_rating_filter = st.slider(
@@ -115,12 +107,12 @@ with st.sidebar:
 
     # Time Filters (Departure & Arrival)
     time_options = ['Anything', '0-6', '6-12', '12-18', '18-24']
-    st.session_state.selected_departure = st.radio(
+    selected_departure = st.radio(
         "Departure Time Range",
         options=time_options,
         index=0
     )
-    st.session_state.selected_arrival = st.radio(
+    selected_arrival = st.radio(
         "Arrival Time Range",
         options=time_options,
         index=0
@@ -132,11 +124,11 @@ with st.sidebar:
         '12-18': (12, 18),
         '18-24': (18, 24)
     }
-    departure_filter = time_map[st.session_state.selected_departure]
-    arrival_filter = time_map[st.session_state.selected_arrival]
+    departure_filter = time_map[selected_departure]
+    arrival_filter = time_map[selected_arrival]
 
     # Duration Filter
-    st.session_state.selected_duration = st.radio(
+    selected_duration = st.radio(
         "Duration Range (hours)",
         options=['Anything', '0-2', '2-4', '4-6', '6+'],
         index=0
@@ -148,7 +140,7 @@ with st.sidebar:
         '4-6': (4, 6),
         '6+': (6, initial_data['duration'].max())
     }
-    duration_filter = duration_map[st.session_state.selected_duration]
+    duration_filter = duration_map[selected_duration]
 
 # Query construction
 query = "SELECT * FROM bus_routes WHERE 1=1"
@@ -173,8 +165,7 @@ query += f" AND duration BETWEEN {duration_filter[0]} AND {duration_filter[1]}"
 filtered_data = fetch_data(query)
 
 # Display results
-st.title(":red[RedBus Routes Data Filtering and Analysis]")
-st.write(":red[Filtered Data:]")
+st.markdown("### Filtered Output")
 st.dataframe(filtered_data)
 
 # Download button
