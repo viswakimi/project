@@ -3,32 +3,6 @@ import pandas as pd
 import numpy as np
 from sqlalchemy import create_engine
 
-# Set Streamlit page configuration
-st.set_page_config(
-    layout="wide",
-    page_icon="🚌",
-    page_title="RedBus Project",
-    initial_sidebar_state="expanded"
-)
-
-# Page styling
-st.markdown(
-    """
-    <style>
-    .stApp {        
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-    }
-    [data-testid="stSidebar"] {
-        background-color: rgba(100, 60, 50, 0.4);
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
 # Database connection
 engine = create_engine('mysql+pymysql://root:Abcd1234@127.0.0.1:3306/redbus')
 
@@ -48,7 +22,7 @@ initial_data['duration'] = (
 )
 
 # Title and Filters
-st.title(":red[RedBus Data Filtering Application]")
+st.title(":red[RedBus Application]")
 
 st.markdown("### Filter by Bus Type and Route")
 col1, col2 = st.columns(2)
@@ -68,7 +42,7 @@ with col2:
 
 # Sidebar Filters
 with st.sidebar:
-    st.header("Additional Filters")
+    st.header(":red[Additional Filters]")
     
     # Price Range Filter
     st.write("Select Price Range:")
@@ -91,9 +65,9 @@ with st.sidebar:
     # Star Rating Filter
     star_rating_filter = st.slider(
         "Star Rating",
-        min_value=0.0,
+        min_value=1.0,
         max_value=5.0,
-        value=(0.0, 5.0),
+        value=(1.0, 5.0),
         step=0.1
     )
 
